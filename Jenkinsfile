@@ -5,8 +5,8 @@ pipeline {
         stage('Jenkinsfile') {
             steps {
                 sh ''' 
-                    'Hello World from Jenkinsfile'
-                    jenkins --version
+                    "Hello World from Jenkinsfile"
+                    'jenkins --version'
                 '''
             }
         }
