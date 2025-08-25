@@ -6,7 +6,7 @@ pipeline {
             steps {
                 sh ''' 
                     echo "Hello World from Jenkinsfile"
-                    'jenkins --version'
+                    ls
                 '''
             }
         }
