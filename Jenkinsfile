@@ -49,7 +49,7 @@ pipeline {
             }
         }
     }
-    
+
 /*
         stage('E2E') {
             agent {
@@ -68,11 +68,12 @@ pipeline {
             }
         }
     }
+    */
 
     post {
         always {
-            junit 'jest-results/junit.xml'
+            junit 'test-results/junit.xml'
         }
     }
-    */
+
 }
