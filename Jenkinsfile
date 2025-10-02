@@ -31,8 +31,8 @@ pipeline {
                 '''
             }
         }
-    }    
-    /*
+       
+
         stage('Test') {
             agent {
                 docker {
@@ -43,11 +43,14 @@ pipeline {
             steps {
                    sh '''
                         test -f build/index.html
+                        # checks the index file exists or
                         npm test
                     '''
             }
         }
-
+    }
+    
+/*
         stage('E2E') {
             agent {
                 docker {
