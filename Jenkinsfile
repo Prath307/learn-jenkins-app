@@ -59,7 +59,9 @@ pipeline {
             steps {
                 sh '''
                     npm install serve
-                    node_modules/.bin/serve -s build
+                    node_modules/.bin/serve -s build &
+                    # & sign tells to run the site in background and continue execution next
+                    sleep 10
                     npx playwright test
                 '''
             }
