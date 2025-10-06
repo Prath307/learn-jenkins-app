@@ -43,7 +43,7 @@ pipeline {
 
             steps {
                    sh '''
-                        test -f public/index.html
+                        test -f build/index.html
                         # checks the index file exists or
                         npm test
                     '''
