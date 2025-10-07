@@ -32,42 +32,47 @@ pipeline {
         }
         */
 
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+        stage('Tests') {
+            parallel {
+                stage('Unit Tests') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+
+                    steps {
+                        sh '''
+                            test -f build/index.html
+                            npm test
+                        '''
+                    }
                 }
-            }
 
-            steps {
-                sh '''
-                    test -f build/index.html
-                    npm test
-                '''
-            }
-        }
+                stage('E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.55.0-noble'
+                            reuseNode true
+                        }
+                    }
 
-        stage('E2E') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.55.0-noble'
-                    reuseNode true
+                    steps {
+                        sh '''
+                            npm install serve
+                            npx playwright install
+                            node_modules/.bin/serve -s build &
+                            # & sign tells to run the site in background and continue execution next
+                            sleep 10
+                            npx playwright test --reporter=line
+                        '''
+                    }
                 }
-            }
-
-            steps {
-                sh '''
-                    npm install serve
-                    npx playwright install
-                    node_modules/.bin/serve -s build &
-                    # & sign tells to run the site in background and continue execution next
-                    sleep 10
-                    npx playwright test --reporter=line
-                '''
             }
         }
     }
+
   
     post {
         always {
