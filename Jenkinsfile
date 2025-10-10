@@ -123,11 +123,6 @@ pipeline {
 
             steps {
                 sh '''
-                    npm install serve
-                    npx playwright install
-                    node_modules/.bin/serve -s build &
-                    # & sign tells to run the site in background and continue execution next
-                    sleep 10
                     npx playwright test --reporter=line
                 '''
             }
