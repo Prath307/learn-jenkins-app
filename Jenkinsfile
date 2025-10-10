@@ -27,6 +27,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo 'Checking for auto run from Jenkins SCM Polling'
                     ls -la
                     node --version
                     npm --version
