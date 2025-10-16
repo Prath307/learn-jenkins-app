@@ -1,14 +1,5 @@
 pipeline {
     agent any
-/* 
-    stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello world'
-            }
-        }
-    }
-*/
 
     environment {
         NETLIFY_SITE_ID = '21e91705-9c44-40a4-9a50-61bcdff8dc9e'
