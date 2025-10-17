@@ -88,6 +88,10 @@ pipeline {
                 }
             }
             steps {
+                echo 'Deploying environment variable'
+                script {
+                    env.MY_VAR = sh(script: 'date', returnStdout: true)
+                }
                 sh '''
                     npm install netlify-cli@20.1.1 node-jq
                     node_modules/.bin/netlify --version
@@ -138,6 +142,8 @@ pipeline {
             }
 
             steps {
+                echo 'E2E uses environment variable defined in deploy'
+                echo "My_VAR is: $env.MY_VAR"
                 sh '''
                     npx playwright install
                     npx playwright test --reporter=line
