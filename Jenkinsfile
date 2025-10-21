@@ -139,25 +139,7 @@ pipeline {
             }
         }
 
-        stage('Deploy prod') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli@20.1.1
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to Production site id: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                '''
-            }
-        }
-
-        stage('Prod E2E') {
+        stage('Deploy prod and E2E Test') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.56.0-noble'
@@ -173,6 +155,11 @@ pipeline {
                 echo 'E2E uses environment variable defined in deploy'
                 echo "My_VAR is: $env.MY_VAR"
                 sh '''
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to Production site id: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
                     npx playwright install
                     npx playwright test --reporter=line
                 '''
