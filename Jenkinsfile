@@ -80,32 +80,7 @@ pipeline {
             }
         }
 
-        stage('Deploy staging') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                echo 'Deploying environment variable'
-                script {
-                    env.MY_VAR = sh(script: 'date', returnStdout: true)
-                }
-                sh '''
-                    npm install netlify-cli@20.1.1 node-jq
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to staginh site id: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
-                '''
-                script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
-                }
-            }
-        }
-
-        stage('Staging E2E') {
+        stage('Deploy Staging and E2E Test') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.56.0-noble'
@@ -113,12 +88,14 @@ pipeline {
                 }
             }
 
-            environment {
-                CI_ENVIRONMENT_URL = "$env.STAGING_URL"
-            }
-
             steps {
                 sh '''
+                    npm install netlify-cli@20.1.1 node-jq
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to staginh site id: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+                    CI_ENVIRONMENT_URL=$("node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json") 
                     npx playwright install
                     npx playwright test --reporter=line
                 '''
@@ -152,8 +129,6 @@ pipeline {
             }
 
             steps {
-                echo 'E2E uses environment variable defined in deploy'
-                echo "My_VAR is: $env.MY_VAR"
                 sh '''
                     npm install netlify-cli@20.1.1
                     node_modules/.bin/netlify --version
