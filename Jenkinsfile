@@ -112,15 +112,13 @@ pipeline {
             }
         }
 
-'''
-        stage('Approval') {
+/*        stage('Approval') {
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
                   input message: 'Do you wish to Deploy to production?', ok: 'Yes, I am sure!'
                 }
             }
-        }
-'''
+        }       */
 
         stage('Deploy prod and E2E Test') {
             agent {
