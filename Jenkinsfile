@@ -71,8 +71,8 @@ pipeline {
                     steps {
                         sh '''
                             npx playwright install
-                            node_modules/.bin/serve -s build &
-                            # & sign tells to run the site in background and continue execution next
+                            serve -s build &
+                            # & sign tells to run the site in background and continue execution next and no need of local path node_modules/.bin/
                             sleep 10
                             npx playwright test --reporter=line
                         '''
