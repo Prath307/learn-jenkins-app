@@ -8,14 +8,6 @@ pipeline {
     }
 
     stages {
-        stage('Docker Image Build') {
-            steps {
-                sh 'docker build -t my-playwright .'
-                // -t for Identifier with name My-playwright
-                // . is for current directory
-            }
-        }
-
         stage('Build') {
             agent {
                 docker {
